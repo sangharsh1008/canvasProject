@@ -9,6 +9,7 @@ const colors = [
   "white",
   "white"
 ];
+//
 export class Temp extends React.Component {
   displayBallRow(stage, y) {
     for (let i = 1; i <= 18; i++) {
