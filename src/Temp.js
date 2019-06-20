@@ -9,7 +9,6 @@ const colors = [
   "white",
   "white"
 ];
-//
 export class Temp extends React.Component {
   displayBallRow(stage, y) {
     for (let i = 1; i <= 18; i++) {
@@ -22,22 +21,56 @@ export class Temp extends React.Component {
       stage.update();
     }
   }
-  spinnerBall(stage, y) {
-    var circle = new createjs.Shape();
+  spinnerBall(arr, stage, x, y) {
+    let circle = new createjs.Shape();
     let random = Math.floor(Math.random() * 7);
     circle.graphics.beginFill("red").drawCircle(0, 0, 10);
-    circle.x = Math.floor(Math.random() * 400);
+    circle.x = x;
     circle.y = y;
     stage.addChild(circle);
     stage.update();
-    circle.on("pressmove", function(evt) {
-      evt.target.x = evt.stageX;
-      evt.target.y = evt.stageY;
+    arr.push(circle);
+    return arr;
+    // circle.on("pressup", evt => {
+    //   console.log("up", evt.target.x, evt.stageX);
+    //   this.animation(
+    //     circle,
+    //     stage,
+    //     evt.target.x,
+    //     evt.target.y,
+    //     Math.floor(evt.stageX),
+    //     Math.floor(evt.stageY)
+    //   );
+    // });
+  }
+
+  animation(circle, stage, cr_x, cr_y, tr_x, tr_y) {
+    console.log(cr_x, cr_y, tr_x, tr_y);
+
+    let ss = createjs.Tween.get(circle, { loop: false });
+    ss.to({ x: tr_x, y: tr_y }, 1000);
+
+    if (tr_y >= 250) {
+      ss.to({ x: 10, y: tr_y - (500 - tr_y) }, 1000);
+      if (tr_x > cr_x) {
+        ss.to({ x: 10, y: tr_y }, 1000);
+      } else {
+        ss.to({ x: 500, y: tr_y }, 1000);
+      }
+    } else {
+      ss.to({ x: cr_x, y: 10 }, 1000);
+      if (tr_x > cr_x) {
+        ss.to({ x: 10, y: tr_y }, 1000);
+      } else {
+        ss.to({ x: 500, y: tr_y }, 1000);
+      }
+    }
+    ss.to({ x: cr_x, y: cr_y }, 1000);
+    createjs.Ticker.setFPS(500);
+    createjs.Ticker.addEventListener("tick", e => {
+      stage.update();
     });
-    circle.on("pressup", function(evt) {
-      console.log("up", evt.target.x);
-    });
-    //
+
     stage.update();
   }
 
@@ -47,12 +80,31 @@ export class Temp extends React.Component {
     rect.graphics.beginFill("white").drawRect(0, 0, 500, 500);
     stage.addChild(rect);
     stage.update();
+    // for (let i = 1; i < 10; i++) {
+    //   this.displayBallRow(stage, i * 20);
+    // }
+    let arr = [];
+    let x = Math.floor(Math.random() * 400);
+    for (let i = 0; i < 6; i++) {
+      this.spinnerBall(arr, stage, x + i, 490);
+    }
+    console.log(arr);
 
-    this.spinnerBall(stage, 490);
-    rect.addEventListener("click", function(event) {
-      console.log(event.stageX, event.stageY, event);
-      alert("clicked");
+    arr[0].on("pressup", evt => {
+      console.log("up", evt.target.x, evt.stageX);
+      for (let i = 0; i < 6; i++) {
+        this.animation(
+          arr[0],
+          stage,
+          evt.target.x + i * 30,
+          evt.target.y + i * 30,
+          Math.floor(evt.stageX),
+          Math.floor(evt.stageY)
+        );
+      }
     });
+
+    // this.spinnerBall(stage, 490);
   }
   componentDidMount() {
     this.displayBalls();
