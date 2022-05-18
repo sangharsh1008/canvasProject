@@ -1,0 +1,3 @@
+- name: Run jenkins jobs
+  uses: Mondtic/build-jenkins-job@v1.0.0
+
