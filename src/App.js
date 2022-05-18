@@ -6,7 +6,7 @@ import { Temp } from "./Temp";
 class App extends Component {
   render() {
     return (
-      <div className="App">
+      <div className="Ap>
         <header className="App-header">
           <Temp />
         </header>
