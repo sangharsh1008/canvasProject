@@ -9,7 +9,7 @@ const colors = [
   "white",
   "white"
 ];
-export class Temp extends React.Component {
+export class Game extends React.Component {
   displayBallRow(stage, y) {
     for (let i = 1; i <= 18; i++) {
       var circle = new createjs.Shape();
@@ -24,24 +24,23 @@ export class Temp extends React.Component {
   spinnerBall(arr, stage, x, y) {
     let circle = new createjs.Shape();
     let random = Math.floor(Math.random() * 7);
-    circle.graphics.beginFill("red").drawCircle(0, 0, 10);
+    circle.graphics.beginFill(random).drawCircle(0, 0, 10);
     circle.x = x;
     circle.y = y;
     stage.addChild(circle);
     stage.update();
     arr.push(circle);
-    return arr;
-    // circle.on("pressup", evt => {
-    //   console.log("up", evt.target.x, evt.stageX);
-    //   this.animation(
-    //     circle,
-    //     stage,
-    //     evt.target.x,
-    //     evt.target.y,
-    //     Math.floor(evt.stageX),
-    //     Math.floor(evt.stageY)
-    //   );
-    // });
+    circle.on("pressup", evt => {
+      console.log("up", evt.target.x, evt.stageX);
+      this.animation(
+        circle,
+        stage,
+        evt.target.x,
+        evt.target.y,
+        Math.floor(evt.stageX),
+        Math.floor(evt.stageY)
+      );
+    });
   }
 
   animation(circle, stage, cr_x, cr_y, tr_x, tr_y) {
@@ -80,12 +79,9 @@ export class Temp extends React.Component {
     rect.graphics.beginFill("white").drawRect(0, 0, 500, 500);
     stage.addChild(rect);
     stage.update();
-    // for (let i = 1; i < 10; i++) {
-    //   this.displayBallRow(stage, i * 20);
-    // }
     let arr = [];
     let x = Math.floor(Math.random() * 400);
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 2; i++) {
       this.spinnerBall(arr, stage, x + i, 490);
     }
     console.log(arr);
@@ -103,8 +99,7 @@ export class Temp extends React.Component {
         );
       }
     });
-
-    // this.spinnerBall(stage, 490);
+    this.displayBallRow(stage,100)
   }
   componentDidMount() {
     this.displayBalls();
